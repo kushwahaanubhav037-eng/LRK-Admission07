@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>LRK Computer Institute Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif}
+:root{
+--bg:#0d0817;
+--card:rgba(255,255,255,.08);
+--glass:rgba(255,255,255,.06);
+--purple:#7d3cff;
+--purple2:#9c6bff;
+--text:#fff;
+--muted:#c8c8d3;
+--border:rgba(255,255,255,.1);
+--success:#18c964;
+--danger:#ff4d6d;
+--shadow:0 10px 40px rgba(125,60,255,.35);
+}
+body{
+background:linear-gradient(135deg,#0d0817,#1a1033,#110a22);
+min-height:100vh;
+color:#fff;
+overflow-x:hidden
+}
+body::-webkit-scrollbar{width:8px}
+body::-webkit-scrollbar-thumb{background:var(--purple)}
+.loader{
+position:fixed;
+inset:0;
+background:#080511;
+display:flex;
+align-items:center;
+justify-content:center;
+z-index:99999;
+transition:.7s
+}
+.loader.hide{opacity:0;visibility:hidden}
+.loaderBox{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:20px
+}
+.ring{
+width:90px;
+height:90px;
+border-radius:50%;
+border:5px solid rgba(255,255,255,.1);
+border-top:5px solid var(--purple);
+animation:spin 1s linear infinite
+}
+.logo{
+font-size:36px;
+font-weight:700;
+color:var(--purple2);
+letter-spacing:3px;
+animation:pulse 1.5s infinite
+}
+@keyframes spin{100%{transform:rotate(360deg)}}
+@keyframes pulse{50%{opacity:.4}}
+.lock{
+position:fixed;
+inset:0;
+display:flex;
+align-items:center;
+justify-content:center;
+background:linear-gradient(135deg,#080511,#160d2d);
+z-index:9999;
+padding:20px;
+transition:.6s
+}
+.lock.hide{
+opacity:0;
+visibility:hidden
+}
+.lockCard{
+width:100%;
+max-width:420px;
+background:var(--glass);
+backdrop-filter:blur(20px);
+border:1px solid var(--border);
+border-radius:28px;
+padding:35px;
+box-shadow:var(--shadow);
+animation:up .6s
+}
+@keyframes up{
+from{transform:translateY(40px);opacity:0}
+to{transform:translateY(0);opacity:1}
+}
+.lockTitle{
+font-size:28px;
+font-weight:700;
+text-align:center;
+margin-bottom:10px
+}
+.lockSub{
+color:var(--muted);
+text-align:center;
+margin-bottom:25px;
+font-size:14px
+}
+.input{
+width:100%;
+background:rgba(255,255,255,.05);
+border:1px solid rgba(255,255,255,.1);
+color:#fff;
+padding:14px 16px;
+border-radius:16px;
+outline:none;
+font-size:14px;
+margin-top:12px
+}
+.btn{
+border:none;
+outline:none;
+cursor:pointer;
+background:linear-gradient(135deg,var(--purple),#b06dff);
+padding:14px;
+width:100%;
+border-radius:16px;
+font-weight:600;
+color:#fff;
+margin-top:16px;
+transition:.3s
+}
+.btn:hover{transform:translateY(-2px)}
+.error{
+color:#ff7790;
+margin-top:10px;
+font-size:13px;
+text-align:center
+}
+.app{
+display:none;
+padding:25px
+}
+.top{
+display:flex;
+justify-content:space-between;
+gap:20px;
+align-items:center;
+flex-wrap:wrap;
+margin-bottom:25px
+}
+.brand{
+background:var(--glass);
+padding:20px;
+border-radius:24px;
+backdrop-filter:blur(20px);
+border:1px solid var(--border)
+}
+.brand h1{
+font-size:28px
+}
+.brand p{
+color:var(--muted)
+}
+.grid5{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:18px;
+margin-bottom:22px
+}
+.card{
+background:var(--glass);
+backdrop-filter:blur(18px);
+border:1px solid var(--border);
+border-radius:24px;
+padding:20px;
+box-shadow:var(--shadow)
+}
+.metric{
+font-size:30px;
+font-weight:700;
+margin-top:10px
+}
+.label{
+color:var(--muted);
+font-size:13px
+}
+.sectionTitle{
+font-size:20px;
+margin-bottom:15px;
+font-weight:600
+}
+.formGrid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:14px
+}
+textarea.input{
+resize:none;
+height:100px
+}
+.two{
+display:grid;
+grid-template-columns:1.2fr .8fr;
+gap:20px
+}
+.profileGrid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+gap:18px
+}
+.student{
+background:var(--glass);
+border:1px solid var(--border);
+border-radius:24px;
+padding:18px;
+transition:.3s
+}
+.student:hover{
+transform:translateY(-4px)
+}
+.badge{
+padding:6px 12px;
+border-radius:50px;
+font-size:12px;
+display:inline-block;
+margin-top:10px
+}
+.paid{background:rgba(24,201,100,.15);color:#4af59b}
+.due{background:rgba(255,77,109,.12);color:#ff7f97}
+.row{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:14px
+}
+.sm{
+padding:11px 16px;
+border:none;
+border-radius:14px;
+cursor:pointer;
+color:#fff;
+font-weight:600
+}
+.edit{background:#5d5dff}
+.del{background:#ff4d6d}
+.wa{background:#18c964}
+.search{
+margin-bottom:18px
+}
+@media(max-width:900px){
+.two{grid-template-columns:1fr}
+.app{padding:15px}
+}
+</style>
+</head>
+<body>
+
+<div class="loader" id="loader">
+<div class="loaderBox">
+<div class="ring"></div>
+<div class="logo">R07</div>
+</div>
+</div>
+
+<div class="lock" id="lock">
+<div class="lockCard">
+<div class="lockTitle">Owner Access</div>
+<div class="lockSub">LRK Computer Institute • Mihinpurwa Bahraich</div>
+<input id="pass" class="input" type="password" placeholder="Enter Password">
+<button class="btn" onclick="unlock()">Unlock Panel</button>
+<div id="err" class="error"></div>
+</div>
+</div>
+
+<div class="app" id="app">
+
+<div class="top">
+<div class="brand">
+<h1>LRK Computer Institute</h1>
+<p>Mihinpurwa Bahraich</p>
+</div>
+</div>
+
+<div class="grid5">
+<div class="card"><div class="label">Total Admissions</div><div class="metric" id="total">0</div></div>
+<div class="card"><div class="label">Fully Paid</div><div class="metric" id="full">0</div></div>
+<div class="card"><div class="label">Due Students</div><div class="metric" id="dueStudents">0</div></div>
+<div class="card"><div class="label">Paid Collection</div><div class="metric" id="paidCol">₹0</div></div>
+<div class="card"><div class="label">Pending Collection</div><div class="metric" id="pendingCol">₹0</div></div>
+</div>
+
+<div class="two">
+
+<div class="card">
+<div class="sectionTitle">New Admission</div>
+
+<div class="grid5" style="margin-bottom:15px">
+<div class="card"><div class="label">Current Roll</div><div class="metric" id="currentRoll">0</div></div>
+<div class="card"><div class="label">Next Roll</div><div class="metric" id="nextRoll">1</div></div>
+<div class="card"><div class="label">Admissions</div><div class="metric" id="adCount">0</div></div>
+</div>
+
+<form id="studentForm">
+<input type="hidden" id="rollNo">
+<div class="formGrid">
+<input class="input" id="name" placeholder="Student Name" required>
+<input class="input" id="father" placeholder="Father Name">
+<input class="input" id="mother" placeholder="Mother Name">
+<input class="input" id="dob" type="date">
+<input class="input" id="mobile1" placeholder="Mobile1">
+<input class="input" id="mobile2" placeholder="Mobile2">
+<input class="input" id="email" placeholder="Email">
+<input class="input" id="qual" placeholder="Qualification">
+<input class="input" id="caste" placeholder="Caste">
+<input class="input" id="aadhar" placeholder="Aadhaar">
+<select class="input" id="course" onchange="courseLogic()">
+<option value="">Course</option>
+<option value="DCA">DCA</option>
+<option value="ADCA">ADCA</option>
+<option value="CCC">CCC</option>
+<option value="Tally">Tally</option>
+<option value="Typing">Typing</option>
+<option value="Custom">Custom</option>
+</select>
+<input class="input" id="customFee" placeholder="Course Fee">
+<textarea class="input" id="address" placeholder="Address"></textarea>
+<select class="input" id="paymentMode">
+<option>Cash</option>
+<option>UPI</option>
+<option>Bank</option>
+</select>
+<input class="input" id="amountPaid" placeholder="Paid Amount" oninput="calcDue()">
+<input class="input" id="amountDue" placeholder="Pending Due" readonly>
+<input class="input" id="promiseDate" type="date">
+</div>
+
+<button class="btn" type="submit">Save Admission</button>
+</form>
+</div><div class="card">
+<div class="sectionTitle">Live Profile Panel</div>
+
+<input class="input search" id="search" placeholder="Search Name / Roll / Mobile / Course">
+
+<div id="profiles" class="profileGrid"></div>
+</div>
+
+</div>
+
+<div class="card" style="margin-top:20px">
+<div class="sectionTitle">Database Registry</div>
+<div id="registry" class="profileGrid"></div>
+</div>
+
+</div>
+
+<script>
+const API="https://script.google.com/macros/s/AKfycbya1BD4eOWtmymxjUBU03gkmQ50qOqjBOkKQ5rHtOFJuhVJWM9SeYp47wl34kHGpGxM_w/exec";
+const PASSWORD="Ritesh kumar R07";
+
+let students=[];
+let loading=false;
+
+const fees={
+DCA:5000,
+ADCA:8000,
+CCC:3000,
+Tally:4000,
+Typing:2500
+};
+
+window.onload=()=>{
+setTimeout(()=>{
+loader.classList.add("hide")
+},1300);
+
+search.addEventListener("input",renderProfiles);
+
+studentForm.addEventListener("submit",saveStudent);
+};
+
+function unlock(){
+const p=pass.value.trim();
+if(p===PASSWORD){
+lock.classList.add("hide");
+app.style.display="block";
+loadStudents();
+}else{
+err.innerText="Wrong Password";
+}
+}
+
+function courseLogic(){
+const c=course.value;
+if(fees[c]){
+customFee.value=fees[c];
+}
+calcDue();
+}
+
+function calcDue(){
+const fee=Number(customFee.value||0);
+const paid=Number(amountPaid.value||0);
+let due=fee-paid;
+if(due<0) due=0;
+amountDue.value=due;
+}
+
+async function loadStudents(){
+
+if(loading) return;
+loading=true;
+
+try{
+
+const res=await fetch(API+"?action=verifyOtp&mobile=ALL_RECORDS");
+const data=await res.json();
+
+students=data.students||[];
+
+renderDashboard();
+renderProfiles();
+
+}catch(e){
+alert("Load Failed");
+}
+
+loading=false;
+}
+
+function renderDashboard(){
+
+const totalS=students.length;
+const paidS=students.filter(s=>Number(s.amountDue)<=0).length;
+const dueS=students.filter(s=>Number(s.amountDue)>0).length;
+const paidAmt=students.reduce((a,b)=>a+Number(b.amountPaid||0),0);
+const dueAmt=students.reduce((a,b)=>a+Number(b.amountDue||0),0);
+
+total.innerText=totalS;
+full.innerText=paidS;
+dueStudents.innerText=dueS;
+paidCol.innerText="₹"+paidAmt;
+pendingCol.innerText="₹"+dueAmt;
+adCount.innerText=totalS;
+
+const last=students.length?students[students.length-1].rollno:0;
+currentRoll.innerText=last;
+nextRoll.innerText=Number(last)+1;
+}
+
+function renderProfiles(){
+
+const q=search.value.toLowerCase();
+
+const filtered=students.filter(s=>
+String(s.name).toLowerCase().includes(q)||
+String(s.rollno).includes(q)||
+String(s.mobile1).includes(q)||
+String(s.course).toLowerCase().includes(q)
+);
+
+profiles.innerHTML="";
+registry.innerHTML="";
+
+filtered.forEach(s=>{
+
+const status=Number(s.amountDue)<=0?"FULL PAID":"DUE";
+
+const waMsg=`Hello ${s.name},
+Roll No: ${s.rollno}
+Course: ${s.course}
+Paid Amount: ₹${s.amountPaid}
+Pending Due: ₹${s.amountDue}
+Promise Date: ${s.promiseDate}
+
+LRK Computer Institute
+Mihinpurwa Bahraich`;
+
+const wa="https://wa.me/91"+s.mobile1+"?text="+encodeURIComponent(waMsg);
+
+profiles.innerHTML+=`
+<div class="student">
+<h3>${s.name}</h3>
+<p>Roll: ${s.rollno}</p>
+<p>Course: ${s.course}</p>
+<p>Mobile: ${s.mobile1}</p>
+<p>Paid: ₹${s.amountPaid}</p>
+<p>Due: ₹${s.amountDue}</p>
+<p>Promise: ${s.promiseDate||"-"}</p>
+<div class="badge ${Number(s.amountDue)<=0?'paid':'due'}">${status}</div>
+<div class="row">
+<button class="sm wa" onclick="window.open('${wa}')">WhatsApp</button>
+</div>
+</div>
+`;
+
+registry.innerHTML+=`
+<div class="student">
+<h3>${s.name}</h3>
+<p><b>Roll:</b> ${s.rollno}</p>
+<p><b>Father:</b> ${s.father||''}</p>
+<p><b>Mother:</b> ${s.mother||''}</p>
+<p><b>DOB:</b> ${s.dob||''}</p>
+<p><b>Mobile1:</b> ${s.mobile1||''}</p>
+<p><b>Mobile2:</b> ${s.mobile2||''}</p>
+<p><b>Email:</b> ${s.email||''}</p>
+<p><b>Qualification:</b> ${s.qual||''}</p>
+<p><b>Caste:</b> ${s.caste||''}</p>
+<p><b>Aadhaar:</b> ${s.aadhar||''}</p>
+<p><b>Course:</b> ${s.course||''}</p>
+<p><b>Address:</b> ${s.address||''}</p>
+<p><b>Payment:</b> ${s.paymentMode||''}</p>
+<p><b>Paid:</b> ₹${s.amountPaid||0}</p>
+<p><b>Due:</b> ₹${s.amountDue||0}</p>
+<p><b>Promise:</b> ${s.promiseDate||''}</p>
+
+<div class="row">
+<button class="sm edit" onclick='editStudent(${JSON.stringify(s)})'>Edit</button>
+<button class="sm del" onclick="deleteStudent('${s.rollno}')">Delete</button>
+<button class="sm wa" onclick="window.open('${wa}')">WhatsApp</button>
+</div>
+</div>
+`;
+});
+}
+async function saveStudent(e){
+e.preventDefault();
+
+const data={
+action:"registerStudent",
+rollNo:rollNo.value,
+name:name.value.trim(),
+father:father.value.trim(),
+mother:mother.value.trim(),
+dob:dob.value,
+mobile1:mobile1.value.trim(),
+mobile2:mobile2.value.trim(),
+email:email.value.trim(),
+qual:qual.value.trim(),
+caste:caste.value.trim(),
+aadhar:aadhar.value.trim(),
+course:course.value,
+address:address.value.trim(),
+paymentMode:paymentMode.value,
+amountPaid:amountPaid.value||0,
+amountDue:amountDue.value||0,
+promiseDate:promiseDate.value
+};
+
+try{
+
+const res=await fetch(API,{
+method:"POST",
+body:JSON.stringify(data)
+});
+
+const json=await res.json();
+
+if(json.status==="success"){
+alert(rollNo.value?"Updated Successfully":"Admission Saved");
+studentForm.reset();
+rollNo.value="";
+amountDue.value="";
+loadStudents();
+}else{
+alert(json.message||"Failed");
+}
+
+}catch(e){
+alert("Save Failed");
+}
+}
+
+function editStudent(s){
+
+rollNo.value=s.rollno||"";
+name.value=s.name||"";
+father.value=s.father||"";
+mother.value=s.mother||"";
+dob.value=formatDate(s.dob);
+mobile1.value=s.mobile1||"";
+mobile2.value=s.mobile2||"";
+email.value=s.email||"";
+qual.value=s.qual||"";
+caste.value=s.caste||"";
+aadhar.value=s.aadhar||"";
+course.value=s.course||"";
+address.value=s.address||"";
+paymentMode.value=s.paymentMode||"Cash";
+amountPaid.value=s.amountPaid||0;
+amountDue.value=s.amountDue||0;
+promiseDate.value=formatDate(s.promiseDate);
+
+if(fees[s.course]){
+customFee.value=Number(s.amountPaid||0)+Number(s.amountDue||0);
+}
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+}
+
+async function deleteStudent(roll){
+
+if(!confirm("Delete Student?")) return;
+
+try{
+
+const res=await fetch(API+"?action=deleteStudent&rollno="+roll);
+const json=await res.json();
+
+if(json.status==="success"){
+students=students.filter(s=>String(s.rollno)!==String(roll));
+renderDashboard();
+renderProfiles();
+alert("Deleted");
+}else{
+alert("Delete Failed");
+}
+
+}catch(e){
+alert("Delete Error");
+}
+}
+
+function formatDate(d){
+
+if(!d) return "";
+
+try{
+const date=new Date(d);
+if(isNaN(date)) return "";
+return date.toISOString().split("T")[0];
+}catch{
+return "";
+}
+}
+</script>
+</body>
+</html>
