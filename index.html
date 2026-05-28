@@ -1516,7 +1516,6 @@ renderProfiles
 
 </script>
 
-
 <script>
 
 studentForm.addEventListener(
@@ -1577,19 +1576,13 @@ paymentMode:
 paymentMode.value,
 
 courseFee:
-Number(
-courseFee.value||0
-),
+Number(courseFee.value||0),
 
 amountPaid:
-Number(
-amountPaid.value||0
-),
+Number(amountPaid.value||0),
 
 amountDue:
-Number(
-amountDue.value||0
-),
+Number(amountDue.value||0),
 
 promiseDate:
 promiseDate.value
@@ -1603,9 +1596,10 @@ await fetch(
 API,
 {
 method:"POST",
+redirect:"follow",
 headers:{
 "Content-Type":
-"application/json"
+"text/plain;charset=utf-8"
 },
 body:
 JSON.stringify(
@@ -1627,12 +1621,12 @@ rollNo.value
 ?
 "Updated Successfully"
 :
-"Admission Saved"
+"Admission Saved Successfully"
 );
 
 resetForm();
 
-loadStudents();
+await loadStudents();
 
 }else{
 
@@ -1645,8 +1639,10 @@ data.message||
 
 }catch(err){
 
+console.log(err);
+
 alert(
-"Network Error"
+"Backend / Network Error"
 );
 
 }
