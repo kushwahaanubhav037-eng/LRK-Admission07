@@ -278,7 +278,9 @@ margin-bottom:18px
 <div class="app" id="app">
 
 <div class="top">
-<div class="brand">
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<button class="btn" style="width:auto;margin:0;padding:12px 18px" onclick="loadStudents()">Refresh</button>
+</div><div class="brand">
 <h1>LRK Computer Institute</h1>
 <p>Mihinpurwa Bahraich</p>
 </div>
@@ -468,7 +470,28 @@ filtered.forEach(s=>{
 
 const status=Number(s.amountDue)<=0?"FULL PAID":"DUE";
 
-const waMsg=`Hello ${s.name},
+const admissionDate=(formatDate(s.createdAt)||"-");
+const waMsg=`Dear Student ${s.name},
+
+आपका Admission ${admissionDate} को LRK Computer Institute, Mihinpurwa Bahraich में हुआ था।
+
+Roll No: ${s.rollno}
+Course: ${s.course}
+Paid Amount: ₹${s.amountPaid}
+Due Amount: ₹${s.amountDue}
+Promise Date: ${s.promiseDate||"-"}
+
+कृपया समय पर फीस जमा करें।
+
+Dear ${s.name},
+Your admission at LRK Computer Institute was completed on ${admissionDate}.
+Paid Amount: ₹${s.amountPaid}
+Due Amount: ₹${s.amountDue}
+Please deposit pending fee by ${s.promiseDate||"-"}.
+
+ISO 9001:2015 Certified
+LRK Computer Institute
+`;
 Roll No: ${s.rollno}
 Course: ${s.course}
 Paid Amount: ₹${s.amountPaid}
@@ -646,16 +669,73 @@ return "";
 <h2>Student Admission PDF</h2>
 <button onclick="closePdfPanel()" style="padding:8px 14px;border:none;border-radius:10px;background:#7d3cff;color:#fff">Close</button>
 </div>
-<div id="pdfContent" style="padding:20px;border:2px solid #333;margin-top:15px">
-<h2 style="text-align:center;color:#d63600">LRK COMPUTER INSTITUTE</h2>
-<h3 style="text-align:center">Admission Form / प्रवेश फॉर्म</h3>
+
+<div id="pdfContent" style="padding:10px;border:2px solid #000;margin-top:15px;background:#fff;color:#000;width:210mm;min-height:297mm">
+<div style="border:2px solid #000;padding:8px">
+
+<div style="display:flex;justify-content:space-between;font-size:12px">
+<div>UP/40/25-26/</div>
+<div>Registration Form</div>
+<div>Mihinpurwa</div>
+</div>
+
+<div style="background:#e33122;color:#fff;border:2px solid #000;padding:6px;text-align:center;font-size:34px;font-weight:900;letter-spacing:1px">
+LRK COMPUTER INSTITUTE
+</div>
+
+<div style="text-align:center;font-weight:900;font-size:18px;margin:6px 0">ISO 9001:2015 CERTIFIED</div>
+
 <div id="pdfStudentData"></div>
-<hr>
-<h4>English Page</h4>
-<p>I agree with LRK Computer Institute rules and regulations.</p>
-<hr>
-<h4>Hindi Page</h4>
-<p>मैं संस्थान के सभी नियम एवं शर्तों को मानने के लिए सहमत हूँ।</p>
+
+<div style="display:grid;grid-template-columns:1fr 1.6fr;gap:10px;margin-top:10px">
+<div>
+<table style="width:100%;border-collapse:collapse;font-size:12px">
+<tr><td style="border:1px solid #000;padding:4px">Course</td><td style="border:1px solid #000;padding:4px">Fees</td></tr>
+<tr><td style="border:1px solid #000;padding:4px">CCC</td><td style="border:1px solid #000;padding:4px"></td></tr>
+<tr><td style="border:1px solid #000;padding:4px">ADCA</td><td style="border:1px solid #000;padding:4px"></td></tr>
+<tr><td style="border:1px solid #000;padding:4px">DCA</td><td style="border:1px solid #000;padding:4px"></td></tr>
+<tr><td style="border:1px solid #000;padding:4px">Typing</td><td style="border:1px solid #000;padding:4px"></td></tr>
+<tr><td style="border:1px solid #000;padding:4px">Tally</td><td style="border:1px solid #000;padding:4px"></td></tr>
+<tr><td style="border:1px solid #000;padding:4px">Other Course</td><td style="border:1px solid #000;padding:4px"></td></tr>
+</table>
+
+<table style="width:100%;border-collapse:collapse;font-size:12px;margin-top:8px">
+<tr><td style="border:1px solid #000;padding:4px">Admission Fees</td></tr>
+<tr><td style="border:1px solid #000;padding:4px">Monthly Fees</td></tr>
+<tr><td style="border:1px solid #000;padding:4px">Exam Fees</td></tr>
+<tr><td style="border:1px solid #000;padding:4px">Other</td></tr>
+<tr><td style="border:1px solid #000;padding:4px">Total</td></tr>
+</table>
+</div>
+
+<div style="border:1px solid #000;padding:8px;font-size:11px;line-height:1.6">
+<div style="text-align:center;font-size:18px;font-weight:700">Rules & Regulations</div>
+1. Student attendance and discipline is compulsory.<br>
+2. Fee once paid will not be refunded or transferred.<br>
+3. Institute decision will be final in all matters.<br>
+4. Damage to institute property is student responsibility.<br>
+5. Smoking and misconduct not allowed.<br>
+6. Student must carry valid ID card.<br>
+7. Institute may modify rules when required.<br>
+
+<div style="margin-top:12px;text-align:center;font-weight:700">
+I have read and accepted all institute rules and regulations.
+</div>
+</div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:15px">
+<div>
+<div style="margin:10px 0">Student Signature __________________</div>
+<div style="margin:10px 0">Receipt No __________________</div>
+<div style="margin:10px 0">Admission Date __________________</div>
+<div style="margin:10px 0">Teacher Sign __________________</div>
+</div>
+<div style="border:1px solid #000;height:120px"></div>
+</div>
+
+</div>
+</div>
 </div>
 <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:15px">
 <button class="btn" style="width:auto" onclick="printPDFCard()">Print</button>
@@ -675,6 +755,15 @@ function openStudentPDF(s){
 pdfStudent=s;
 pdfModal.style.display="flex";
 pdfStudentData.innerHTML=`
+<table style="width:100%;border-collapse:collapse;font-size:12px">
+<tr><td style="border:1px solid #000;padding:4px">Name</td><td style="border:1px solid #000;padding:4px">${s.name||''}</td><td style="border:1px solid #000;padding:4px">Mother</td><td style="border:1px solid #000;padding:4px">${s.mother||''}</td></tr>
+<tr><td style="border:1px solid #000;padding:4px">Father Name</td><td style="border:1px solid #000;padding:4px">${s.father||''}</td><td style="border:1px solid #000;padding:4px">Mobile 2</td><td style="border:1px solid #000;padding:4px">${s.mobile2||''}</td></tr>
+<tr><td style="border:1px solid #000;padding:4px">Address</td><td style="border:1px solid #000;padding:4px">${s.address||''}</td><td style="border:1px solid #000;padding:4px">Caste</td><td style="border:1px solid #000;padding:4px">${s.caste||''}</td></tr>
+<tr><td style="border:1px solid #000;padding:4px">DOB</td><td style="border:1px solid #000;padding:4px">${s.dob||''}</td><td style="border:1px solid #000;padding:4px">Qualification</td><td style="border:1px solid #000;padding:4px">${s.qual||''}</td></tr>
+<tr><td style="border:1px solid #000;padding:4px">Mobile 1</td><td style="border:1px solid #000;padding:4px">${s.mobile1||''}</td><td style="border:1px solid #000;padding:4px">Aadhaar</td><td style="border:1px solid #000;padding:4px">${s.aadhar||''}</td></tr>
+<tr><td style="border:1px solid #000;padding:4px">Course</td><td style="border:1px solid #000;padding:4px">${s.course||''}</td><td style="border:1px solid #000;padding:4px">Admission Date</td><td style="border:1px solid #000;padding:4px">${formatDate(s.createdAt)||''}</td></tr>
+</table>
+`;//
 <p><b>Name:</b> ${s.name||''}</p>
 <p><b>Father:</b> ${s.father||''}</p>
 <p><b>Mother:</b> ${s.mother||''}</p>
