@@ -3,797 +3,2636 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>LRK Computer Institute Admin</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>LRK Computer Institute | Admin Panel</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
 :root{
---bg:#0d0817;
---card:rgba(255,255,255,.08);
---glass:rgba(255,255,255,.06);
+--bg1:#0b0714;
+--bg2:#140b25;
+--bg3:#1b1030;
+--glass:rgba(255,255,255,.07);
+--border:rgba(255,255,255,.10);
 --purple:#7d3cff;
---purple2:#9c6bff;
---text:#fff;
---muted:#c8c8d3;
---border:rgba(255,255,255,.1);
---success:#18c964;
---danger:#ff4d6d;
---shadow:0 10px 40px rgba(125,60,255,.35);
+--purple2:#b26dff;
+--text:#ffffff;
+--muted:#cfcfe7;
+--shadow:0 15px 45px rgba(125,60,255,.35);
 }
+
 body{
-background:linear-gradient(135deg,#0d0817,#1a1033,#110a22);
-min-height:100vh;
+background:
+radial-gradient(circle at top left,#281049 0%,transparent 40%),
+linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
 color:#fff;
-overflow-x:hidden
+min-height:100vh;
+overflow-x:hidden;
 }
-body::-webkit-scrollbar{width:8px}
-body::-webkit-scrollbar-thumb{background:var(--purple)}
+
+body::-webkit-scrollbar{
+width:8px;
+}
+
+body::-webkit-scrollbar-thumb{
+background:var(--purple);
+border-radius:20px;
+}
+
 .loader{
 position:fixed;
 inset:0;
-background:#080511;
+background:#07040f;
 display:flex;
-align-items:center;
 justify-content:center;
-z-index:99999;
-transition:.7s
+align-items:center;
+z-index:999999;
+transition:.8s;
 }
-.loader.hide{opacity:0;visibility:hidden}
+
+.loader.hide{
+opacity:0;
+visibility:hidden;
+}
+
 .loaderBox{
 display:flex;
 flex-direction:column;
 align-items:center;
-gap:20px
+gap:20px;
 }
-.ring{
-width:90px;
-height:90px;
+
+.r07Ring{
+width:110px;
+height:110px;
 border-radius:50%;
-border:5px solid rgba(255,255,255,.1);
+border:5px solid rgba(255,255,255,.08);
 border-top:5px solid var(--purple);
-animation:spin 1s linear infinite
+animation:spin 1s linear infinite;
 }
-.logo{
-font-size:36px;
-font-weight:700;
+
+@keyframes spin{
+100%{
+transform:rotate(360deg);
+}
+}
+
+.r07Text{
+font-size:42px;
+font-weight:800;
+letter-spacing:6px;
 color:var(--purple2);
-letter-spacing:3px;
-animation:pulse 1.5s infinite
+animation:pulse 1.3s infinite;
 }
-@keyframes spin{100%{transform:rotate(360deg)}}
-@keyframes pulse{50%{opacity:.4}}
-.lock{
+
+@keyframes pulse{
+50%{
+opacity:.4;
+transform:scale(.95);
+}
+}
+
+.loaderSub{
+color:var(--muted);
+font-size:14px;
+letter-spacing:2px;
+}
+
+.lockScreen{
 position:fixed;
 inset:0;
 display:flex;
-align-items:center;
 justify-content:center;
-background:linear-gradient(135deg,#080511,#160d2d);
-z-index:9999;
+align-items:center;
 padding:20px;
-transition:.6s
+background:
+radial-gradient(circle at top,#321159 0%,transparent 35%),
+linear-gradient(135deg,#09050f,#140b25,#1a1030);
+z-index:99999;
+transition:.8s;
 }
-.lock.hide{
+
+.lockScreen.hide{
 opacity:0;
-visibility:hidden
+visibility:hidden;
 }
+
 .lockCard{
 width:100%;
-max-width:420px;
-background:var(--glass);
-backdrop-filter:blur(20px);
-border:1px solid var(--border);
-border-radius:28px;
-padding:35px;
-box-shadow:var(--shadow);
-animation:up .6s
-}
-@keyframes up{
-from{transform:translateY(40px);opacity:0}
-to{transform:translateY(0);opacity:1}
-}
-.lockTitle{
-font-size:28px;
-font-weight:700;
-text-align:center;
-margin-bottom:10px
-}
-.lockSub{
-color:var(--muted);
-text-align:center;
-margin-bottom:25px;
-font-size:14px
-}
-.input{
-width:100%;
-background:rgba(255,255,255,.05);
-border:1px solid rgba(255,255,255,.1);
-color:#fff;
-padding:14px 16px;
-border-radius:16px;
-outline:none;
-font-size:14px;
-margin-top:12px
-}
-.btn{
-border:none;
-outline:none;
-cursor:pointer;
-background:linear-gradient(135deg,var(--purple),#b06dff);
-padding:14px;
-width:100%;
-border-radius:16px;
-font-weight:600;
-color:#fff;
-margin-top:16px;
-transition:.3s
-}
-.btn:hover{transform:translateY(-2px)}
-.error{
-color:#ff7790;
-margin-top:10px;
-font-size:13px;
-text-align:center
-}
-.app{
-display:none;
-padding:25px
-}
-.top{
-display:flex;
-justify-content:space-between;
-gap:20px;
-align-items:center;
-flex-wrap:wrap;
-margin-bottom:25px
-}
-.brand{
-background:var(--glass);
-padding:20px;
-border-radius:24px;
-backdrop-filter:blur(20px);
-border:1px solid var(--border)
-}
-.brand h1{
-font-size:28px
-}
-.brand p{
-color:var(--muted)
-}
-.grid5{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:18px;
-margin-bottom:22px
-}
-.card{
-background:var(--glass);
+max-width:430px;
+padding:38px;
+border-radius:32px;
+position:relative;
+overflow:hidden;
+background:rgba(255,255,255,.07);
 backdrop-filter:blur(18px);
-border:1px solid var(--border);
-border-radius:24px;
-padding:20px;
-box-shadow:var(--shadow)
+border:1px solid rgba(255,255,255,.10);
+box-shadow:var(--shadow);
 }
-.metric{
-font-size:30px;
-font-weight:700;
-margin-top:10px
+
+.lockGlow{
+position:absolute;
+width:180px;
+height:180px;
+background:#7d3cff50;
+filter:blur(60px);
+top:-40px;
+right:-40px;
 }
-.label{
+
+.lockTitle{
+font-size:32px;
+font-weight:800;
+margin-bottom:6px;
+position:relative;
+z-index:2;
+text-align:center;
+}
+
+.lockSub{
+font-size:14px;
 color:var(--muted);
-font-size:13px
+text-align:center;
+margin-bottom:28px;
+position:relative;
+z-index:2;
 }
-.sectionTitle{
-font-size:20px;
-margin-bottom:15px;
-font-weight:600
+
+.isoTag{
+display:flex;
+justify-content:center;
+margin-bottom:18px;
 }
-.formGrid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:14px
-}
-textarea.input{
-resize:none;
-height:100px
-}
-.two{
-display:grid;
-grid-template-columns:1.2fr .8fr;
-gap:20px
-}
-.profileGrid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-gap:18px
-}
-.student{
-background:var(--glass);
-border:1px solid var(--border);
-border-radius:24px;
-padding:18px;
-transition:.3s
-}
-.student:hover{
-transform:translateY(-4px)
-}
-.badge{
-padding:6px 12px;
+
+.isoTag span{
+background:linear-gradient(135deg,var(--purple),#aa6bff);
+padding:10px 18px;
 border-radius:50px;
 font-size:12px;
-display:inline-block;
-margin-top:10px
+font-weight:700;
+letter-spacing:1px;
+box-shadow:0 8px 25px rgba(125,60,255,.4);
 }
-.paid{background:rgba(24,201,100,.15);color:#4af59b}
-.due{background:rgba(255,77,109,.12);color:#ff7f97}
-.row{
+
+.input{
+width:100%;
+padding:15px 18px;
+background:rgba(255,255,255,.05);
+border:1px solid rgba(255,255,255,.08);
+border-radius:18px;
+outline:none;
+color:#fff;
+font-size:14px;
+transition:.3s;
+}
+
+.input:focus{
+border-color:var(--purple);
+box-shadow:0 0 0 4px rgba(125,60,255,.15);
+}
+
+.btn{
+width:100%;
+padding:15px;
+border:none;
+outline:none;
+border-radius:18px;
+cursor:pointer;
+background:linear-gradient(135deg,var(--purple),#b66dff);
+color:#fff;
+font-size:15px;
+font-weight:700;
+margin-top:16px;
+transition:.3s;
+box-shadow:0 10px 25px rgba(125,60,255,.4);
+}
+
+.btn:hover{
+transform:translateY(-2px);
+}
+
+.errorBox{
+text-align:center;
+font-size:13px;
+margin-top:12px;
+color:#ff7f9c;
+min-height:18px;
+}
+
+#app{
+display:none;
+min-height:100vh;
+}
+
+.topbar{
+padding:22px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:20px;
+flex-wrap:wrap;
+border-bottom:1px solid rgba(255,255,255,.06);
+position:sticky;
+top:0;
+z-index:99;
+backdrop-filter:blur(18px);
+background:rgba(10,8,20,.45);
+}
+
+.brandBox{
+display:flex;
+align-items:center;
+gap:18px;
+}
+
+.logoCircle{
+width:62px;
+height:62px;
+border-radius:20px;
+background:linear-gradient(135deg,var(--purple),#b96dff);
+display:flex;
+justify-content:center;
+align-items:center;
+font-weight:800;
+font-size:20px;
+box-shadow:0 10px 30px rgba(125,60,255,.45);
+}
+
+.brandText h1{
+font-size:24px;
+font-weight:800;
+line-height:1.2;
+}
+
+.brandText p{
+font-size:13px;
+color:var(--muted);
+margin-top:3px;
+}
+
+.topActions{
 display:flex;
 gap:10px;
 flex-wrap:wrap;
-margin-top:14px
 }
-.sm{
-padding:11px 16px;
-border:none;
-border-radius:14px;
-cursor:pointer;
-color:#fff;
-font-weight:600
-}
-.edit{background:#5d5dff}
-.del{background:#ff4d6d}
-.wa{background:#18c964}
-.search{
-margin-bottom:18px
-}
-@media(max-width:900px){
-.two{grid-template-columns:1fr}
-.app{padding:15px}
-}
-</style>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+.actionBtn{
+border:none;
+cursor:pointer;
+padding:12px 18px;
+border-radius:16px;
+background:rgba(255,255,255,.05);
+color:#fff;
+font-weight:600;
+border:1px solid rgba(255,255,255,.08);
+transition:.3s;
+}
+
+.mainWrap{
+padding:24px;
+}
+
+</style>
 </head>
 <body>
 
 <div class="loader" id="loader">
 <div class="loaderBox">
-<div class="ring"></div>
-<div class="logo">R07</div>
+<div class="r07Ring"></div>
+<div class="r07Text">R07</div>
+<div class="loaderSub">LRK ADMIN SYSTEM</div>
 </div>
 </div>
 
-<div class="lock" id="lock">
+<div class="lockScreen" id="lockScreen">
+
 <div class="lockCard">
-<div class="lockTitle">Owner Access</div>
-<div class="lockSub">LRK Computer Institute • Mihinpurwa Bahraich</div>
-<input id="pass" class="input" type="password" placeholder="Enter Password">
-<button class="btn" onclick="unlock()">Unlock Panel</button>
-<div id="err" class="error"></div>
-</div>
-</div>
 
-<div class="app" id="app">
+<div class="lockGlow"></div>
 
-<div class="top">
-<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-<button class="btn" style="width:auto;margin:0;padding:12px 18px" onclick="loadStudents()">Refresh</button>
-</div><div class="brand">
-<h1>LRK Computer Institute</h1>
-<p>Mihinpurwa Bahraich</p>
-</div>
+<div class="isoTag">
+<span>ISO CERTIFIED 9001-2015</span>
 </div>
 
-<div class="grid5">
-<div class="card"><div class="label">Total Admissions</div><div class="metric" id="total">0</div></div>
-<div class="card"><div class="label">Fully Paid</div><div class="metric" id="full">0</div></div>
-<div class="card"><div class="label">Due Students</div><div class="metric" id="dueStudents">0</div></div>
-<div class="card"><div class="label">Paid Collection</div><div class="metric" id="paidCol">₹0</div></div>
-<div class="card"><div class="label">Pending Collection</div><div class="metric" id="pendingCol">₹0</div></div>
+<div class="lockTitle">
+OWNER ACCESS
 </div>
 
-<div class="two">
-
-<div class="card">
-<div class="sectionTitle">New Admission</div>
-
-<div class="grid5" style="margin-bottom:15px">
-<div class="card"><div class="label">Current Roll</div><div class="metric" id="currentRoll">0</div></div>
-<div class="card"><div class="label">Next Roll</div><div class="metric" id="nextRoll">1</div></div>
-<div class="card"><div class="label">Admissions</div><div class="metric" id="adCount">0</div></div>
+<div class="lockSub">
+LRK Computer Institute<br>
+Mihinpurwa Bahraich
 </div>
+
+<input
+id="ownerPassword"
+type="password"
+class="input"
+placeholder="Enter Owner Password">
+
+<button
+class="btn"
+onclick="unlockPanel()">
+Unlock Panel
+</button>
+
+<div class="errorBox" id="lockError"></div>
+
+</div>
+
+</div>
+
+<div id="app">
+
+<div class="topbar">
+
+<div class="brandBox">
+
+<div class="logoCircle">
+LRK
+</div>
+
+<div class="brandText">
+<h1>LRK COMPUTER INSTITUTE</h1>
+<p>Mihinpurwa Bahraich • ISO CERTIFIED 9001-2015</p>
+</div>
+
+</div>
+
+<div class="topActions">
+
+<button class="actionBtn" onclick="refreshData()">
+Refresh
+</button>
+
+</div>
+
+</div>
+
+<div class="mainWrap">
+<style>
+
+.sectionTitle{
+font-size:22px;
+font-weight:700;
+margin-bottom:18px;
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.statsGrid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:18px;
+}
+
+.statCard{
+background:rgba(255,255,255,.07);
+backdrop-filter:blur(18px);
+border:1px solid rgba(255,255,255,.10);
+box-shadow:var(--shadow);
+padding:22px;
+border-radius:28px;
+position:relative;
+overflow:hidden;
+transition:.35s;
+}
+
+.statCard:hover{
+transform:translateY(-5px);
+}
+
+.statGlow{
+position:absolute;
+width:120px;
+height:120px;
+background:#7d3cff35;
+border-radius:50%;
+filter:blur(40px);
+top:-30px;
+right:-30px;
+}
+
+.statLabel{
+font-size:13px;
+color:var(--muted);
+margin-bottom:12px;
+position:relative;
+z-index:2;
+}
+
+.statValue{
+font-size:34px;
+font-weight:800;
+position:relative;
+z-index:2;
+}
+
+.statMini{
+font-size:12px;
+margin-top:8px;
+color:#d9d9f4;
+position:relative;
+z-index:2;
+}
+
+.twoCol{
+display:grid;
+grid-template-columns:1.2fr .8fr;
+gap:22px;
+margin-top:22px;
+}
+
+.panelCard{
+background:rgba(255,255,255,.07);
+backdrop-filter:blur(18px);
+border:1px solid rgba(255,255,255,.10);
+box-shadow:var(--shadow);
+border-radius:30px;
+padding:22px;
+}
+
+.panelHead{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:18px;
+flex-wrap:wrap;
+gap:10px;
+}
+
+.panelHead h2{
+font-size:22px;
+font-weight:700;
+}
+
+.rollWrap{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:14px;
+margin-top:16px;
+}
+
+.rollCard{
+padding:18px;
+border-radius:22px;
+background:rgba(255,255,255,.04);
+border:1px solid rgba(255,255,255,.08);
+}
+
+.rollLabel{
+font-size:12px;
+color:var(--muted);
+}
+
+.rollValue{
+font-size:24px;
+font-weight:800;
+margin-top:8px;
+}
+
+@media(max-width:980px){
+.twoCol{
+grid-template-columns:1fr;
+}
+}
+
+@media(max-width:700px){
+.rollWrap{
+grid-template-columns:1fr;
+}
+}
+
+</style>
+
+<div class="section">
+
+<div class="sectionTitle">
+📊 Dashboard Overview
+</div>
+
+<div class="statsGrid">
+
+<div class="statCard">
+<div class="statGlow"></div>
+<div class="statLabel">Total Admissions</div>
+<div class="statValue" id="totalAdmissions">0</div>
+<div class="statMini">Registered Students</div>
+</div>
+
+<div class="statCard">
+<div class="statGlow"></div>
+<div class="statLabel">Fully Paid Students</div>
+<div class="statValue" id="fullyPaid">0</div>
+<div class="statMini">Completed Fees</div>
+</div>
+
+<div class="statCard">
+<div class="statGlow"></div>
+<div class="statLabel">Due Students</div>
+<div class="statValue" id="dueStudents">0</div>
+<div class="statMini">Pending Payment</div>
+</div>
+
+<div class="statCard">
+<div class="statGlow"></div>
+<div class="statLabel">Total Paid Collection</div>
+<div class="statValue" id="paidCollection">₹0</div>
+<div class="statMini">Collected Fees</div>
+</div>
+
+<div class="statCard">
+<div class="statGlow"></div>
+<div class="statLabel">Pending Collection</div>
+<div class="statValue" id="pendingCollection">₹0</div>
+<div class="statMini">Remaining Fees</div>
+</div>
+
+</div>
+
+<div class="twoCol">
+
+<div class="panelCard">
+
+<div class="panelHead">
+<h2>🎓 Admission Dashboard</h2>
+</div>
+
+<div class="rollWrap">
+
+<div class="rollCard">
+<div class="rollLabel">Current Roll Number</div>
+<div class="rollValue" id="currentRoll">0</div>
+</div>
+
+<div class="rollCard">
+<div class="rollLabel">Next Roll Number</div>
+<div class="rollValue" id="nextRoll">1</div>
+</div>
+
+<div class="rollCard">
+<div class="rollLabel">Total Admissions</div>
+<div class="rollValue" id="admissionCount">0</div>
+</div>
+
+</div>
+<style>
+
+.formGrid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:15px;
+margin-top:22px;
+}
+
+.field{
+display:flex;
+flex-direction:column;
+gap:8px;
+}
+
+.field label{
+font-size:12px;
+color:var(--muted);
+font-weight:600;
+}
+
+.select,
+.input{
+width:100%;
+padding:15px 18px;
+border-radius:18px;
+background:rgba(255,255,255,.05);
+border:1px solid rgba(255,255,255,.08);
+outline:none;
+color:#fff;
+font-size:14px;
+}
+
+.select option{
+background:#1a1030;
+color:#fff;
+}
+
+.textarea{
+min-height:110px;
+resize:none;
+}
+
+.feeBox{
+margin-top:20px;
+padding:18px;
+border-radius:24px;
+background:rgba(255,255,255,.04);
+border:1px solid rgba(255,255,255,.08);
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:14px;
+}
+
+.feeMini{
+padding:15px;
+border-radius:18px;
+background:rgba(255,255,255,.04);
+}
+
+.feeMini span{
+display:block;
+font-size:12px;
+color:var(--muted);
+}
+
+.feeMini b{
+display:block;
+font-size:22px;
+margin-top:6px;
+}
+
+.formActions{
+display:flex;
+gap:12px;
+flex-wrap:wrap;
+margin-top:22px;
+}
+
+.saveBtn{
+flex:1;
+padding:15px;
+border:none;
+border-radius:18px;
+cursor:pointer;
+font-size:15px;
+font-weight:700;
+background:linear-gradient(135deg,var(--purple),#b56dff);
+color:#fff;
+}
+
+.resetBtn{
+flex:1;
+padding:15px;
+border:none;
+border-radius:18px;
+cursor:pointer;
+font-size:15px;
+font-weight:700;
+background:rgba(255,255,255,.06);
+color:#fff;
+border:1px solid rgba(255,255,255,.08);
+}
+
+@media(max-width:700px){
+.feeBox{
+grid-template-columns:1fr;
+}
+}
+
+</style>
 
 <form id="studentForm">
+
 <input type="hidden" id="rollNo">
+
 <div class="formGrid">
-<input class="input" id="name" placeholder="Student Name" required>
-<input class="input" id="father" placeholder="Father Name">
-<input class="input" id="mother" placeholder="Mother Name">
-<input class="input" id="dob" type="date">
-<input class="input" id="mobile1" placeholder="Mobile1">
-<input class="input" id="mobile2" placeholder="Mobile2">
-<input class="input" id="email" placeholder="Email">
-<input class="input" id="qual" placeholder="Qualification">
-<input class="input" id="caste" placeholder="Caste">
-<input class="input" id="aadhar" placeholder="Aadhaar">
-<select class="input" id="course" onchange="courseLogic()">
-<option value="">Course</option>
-<option value="DCA">DCA</option>
-<option value="ADCA">ADCA</option>
+
+<div class="field">
+<label>Student Name</label>
+<input id="studentName" class="input">
+</div>
+
+<div class="field">
+<label>Father Name</label>
+<input id="fatherName" class="input">
+</div>
+
+<div class="field">
+<label>Mother Name</label>
+<input id="motherName" class="input">
+</div>
+
+<div class="field">
+<label>Date Of Birth</label>
+<input type="date" id="dob" class="input">
+</div>
+
+<div class="field">
+<label>Mobile No 1</label>
+<input id="mobile1" class="input">
+</div>
+
+<div class="field">
+<label>Mobile No 2</label>
+<input id="mobile2" class="input">
+</div>
+
+<div class="field">
+<label>Email</label>
+<input id="email" class="input">
+</div>
+
+<div class="field">
+<label>Qualification</label>
+<input id="qualification" class="input">
+</div>
+
+<div class="field">
+<label>Caste</label>
+<input id="caste" class="input">
+</div>
+
+<div class="field">
+<label>Aadhar No</label>
+<input id="aadhar" class="input">
+</div>
+
+<div class="field">
+<label>Course</label>
+
+<select
+id="course"
+class="select"
+onchange="courseLogic()">
+
+<option value="">Select Course</option>
 <option value="CCC">CCC</option>
-<option value="Tally">Tally</option>
+<option value="Basic">Basic</option>
+<option value="DCA">DCA</option>
+<option value="DDA">DDA</option>
+<option value="ADCA">ADCA</option>
+<option value="ADFC">ADFC</option>
+<option value="BCC">BCC</option>
 <option value="Typing">Typing</option>
-<option value="Custom">Custom</option>
+<option value="Internet">Internet</option>
+<option value="Graphic Design">Graphic Design</option>
+<option value="Ad- Graphic Design">Ad- Graphic Design</option>
+<option value="Tally Erp9">Tally Erp9</option>
+<option value="Tally Prime">Tally Prime</option>
+<option value="Tally Gst">Tally Gst</option>
+<option value="CSC">CSC</option>
+<option value="Advance Excel">Advance Excel</option>
+<option value="Jan Sewa">Jan Sewa</option>
+<option value="HTML">HTML</option>
+<option value="CSS">CSS</option>
+<option value="PHOTOSHOP">PHOTOSHOP</option>
+<option value="WPD">WPD</option>
+<option value="Other Course">Other Course</option>
+
 </select>
-<input class="input" id="customFee" placeholder="Course Fee">
-<textarea class="input" id="address" placeholder="Address"></textarea>
-<select class="input" id="paymentMode">
+</div>
+
+<div class="field">
+<label>Course Fee</label>
+<input id="courseFee" class="input" oninput="calcDue()">
+</div>
+
+<div class="field">
+<label>Payment Mode</label>
+<select id="paymentMode" class="select">
 <option>Cash</option>
 <option>UPI</option>
 <option>Bank</option>
 </select>
-<input class="input" id="amountPaid" placeholder="Paid Amount" oninput="calcDue()">
-<input class="input" id="amountDue" placeholder="Pending Due" readonly>
-<input class="input" id="promiseDate" type="date">
 </div>
 
-<button class="btn" type="submit">Save Admission</button>
+<div class="field">
+<label>Paid Amount</label>
+<input id="amountPaid" class="input" oninput="calcDue()">
+</div>
+
+<div class="field">
+<label>Pending Due</label>
+<input id="amountDue" class="input" readonly>
+</div>
+
+<div class="field">
+<label>Promise Date</label>
+<input type="date" id="promiseDate" class="input">
+</div>
+
+<div class="field" style="grid-column:1/-1">
+<label>Address</label>
+<textarea id="address" class="input textarea"></textarea>
+</div>
+
+</div>
+
+<div class="feeBox">
+
+<div class="feeMini">
+<span>Total Fee</span>
+<b id="feePreview">₹0</b>
+</div>
+
+<div class="feeMini">
+<span>Paid</span>
+<b id="paidPreview">₹0</b>
+</div>
+
+<div class="feeMini">
+<span>Due</span>
+<b id="duePreview">₹0</b>
+</div>
+
+</div>
+
+<div class="formActions">
+
+<button type="submit" class="saveBtn">
+Save Admission
+</button>
+
+<button
+type="button"
+class="resetBtn"
+onclick="resetForm()">
+Reset Form
+</button>
+
+</div>
+
 </form>
-</div><div class="card">
-<div class="sectionTitle">Live Profile Panel</div>
 
-<input class="input search" id="search" placeholder="Search Name / Roll / Mobile / Course">
+</div>
 
-<div id="profiles" class="profileGrid"></div>
+<style>
+
+.livePanelInfo{
+display:flex;
+gap:12px;
+flex-wrap:wrap;
+margin-top:10px;
+}
+
+.liveTag{
+padding:10px 16px;
+border-radius:40px;
+font-size:12px;
+background:rgba(255,255,255,.05);
+border:1px solid rgba(255,255,255,.08);
+}
+
+.searchBox{
+margin-top:18px;
+}
+
+.searchInput{
+width:100%;
+padding:15px 18px;
+border-radius:18px;
+background:rgba(255,255,255,.05);
+border:1px solid rgba(255,255,255,.08);
+color:#fff;
+outline:none;
+font-size:14px;
+}
+
+.liveProfiles{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:18px;
+margin-top:20px;
+}
+
+.emptyCard{
+padding:35px;
+text-align:center;
+border-radius:26px;
+font-size:14px;
+color:var(--muted);
+background:rgba(255,255,255,.05);
+border:1px solid rgba(255,255,255,.08);
+}
+
+.profileCard{
+padding:20px;
+border-radius:26px;
+background:rgba(255,255,255,.06);
+border:1px solid rgba(255,255,255,.08);
+}
+
+.profileTop{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:12px;
+gap:10px;
+}
+
+.profileTop h3{
+font-size:18px;
+font-weight:700;
+}
+
+.statusBadge{
+padding:8px 14px;
+border-radius:30px;
+font-size:11px;
+font-weight:700;
+}
+
+.profileGrid{
+display:grid;
+gap:8px;
+font-size:13px;
+color:#d8d8ef;
+}
+
+.cardBtns{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:16px;
+}
+
+</style>
+
+</div>
+
+<div class="panelCard">
+
+<div class="panelHead">
+<h2>👤 Live Profile Panel</h2>
+</div>
+
+<div class="livePanelInfo">
+<div class="liveTag">Search By Name</div>
+<div class="liveTag">Search By Roll</div>
+<div class="liveTag">Search By Mobile</div>
+<div class="liveTag">Search By Course</div>
+</div>
+
+<div class="searchBox">
+<input
+id="liveSearch"
+class="searchInput"
+placeholder="Search Student / Roll / Mobile / Course">
+</div>
+
+<div
+id="liveProfiles"
+class="liveProfiles">
+
+<div class="emptyCard">
+No Students Loaded
 </div>
 
 </div>
 
-<div class="card" style="margin-top:20px">
-<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div class="sectionTitle">Database Registry + Student PDF Center</div><button class="btn" style="width:auto;padding:12px 18px;margin:0" onclick="openPdfPanel()">PDF / Print Center</button></div>
-<div id="registry" class="profileGrid"></div>
 </div>
 
 </div>
 
 <script>
-const API="https://script.google.com/macros/s/AKfycbya1BD4eOWtmymxjUBU03gkmQ50qOqjBOkKQ5rHtOFJuhVJWM9SeYp47wl34kHGpGxM_w/exec";
-const PASSWORD="Ritesh kumar R07";
+
+const API =
+"https://script.google.com/macros/s/AKfycbwGeZdui2y6akgCK991wIGjdE1zfYDmbDv_voBBWzYVnyEWxWbnfof2gsfa7W7BDU-cQw/exec";
 
 let students=[];
 let loading=false;
 
-const fees={
-DCA:5000,
-ADCA:8000,
+const feeMap={
+
 CCC:3000,
-Tally:4000,
-Typing:2500
+Basic:2500,
+DCA:5000,
+DDA:4500,
+ADCA:8000,
+ADFC:6500,
+BCC:3000,
+Typing:2500,
+Internet:2000,
+"Graphic Design":7000,
+"Ad- Graphic Design":9000,
+"Tally Erp9":4000,
+"Tally Prime":4500,
+"Tally Gst":5000,
+CSC:3500,
+"Advance Excel":3500,
+"Jan Sewa":3000,
+HTML:3000,
+CSS:3000,
+PHOTOSHOP:4500,
+WPD:3500
+
 };
-
-window.onload=()=>{
-setTimeout(()=>{
-loader.classList.add("hide")
-},1300);
-
-search.addEventListener("input",renderProfiles);
-
-studentForm.addEventListener("submit",saveStudent);
-};
-
-function unlock(){
-const p=pass.value.trim();
-if(p===PASSWORD){
-lock.classList.add("hide");
-app.style.display="block";
-loadStudents();
-}else{
-err.innerText="Wrong Password";
-}
-}
 
 function courseLogic(){
+
 const c=course.value;
-if(fees[c]){
-customFee.value=fees[c];
+
+if(feeMap[c]){
+courseFee.value=feeMap[c];
 }
+
 calcDue();
+
 }
 
 function calcDue(){
-const fee=Number(customFee.value||0);
-const paid=Number(amountPaid.value||0);
-let due=fee-paid;
-if(due<0) due=0;
-amountDue.value=due;
+
+const fee=
+Number(courseFee.value||0);
+
+const paid=
+Number(amountPaid.value||0);
+
+let due=
+fee-paid;
+
+if(due<0){
+due=0;
 }
+
+amountDue.value=due;
+
+feePreview.innerHTML=
+"₹"+fee;
+
+paidPreview.innerHTML=
+"₹"+paid;
+
+duePreview.innerHTML=
+"₹"+due;
+
+}
+
+function resetForm(){
+
+studentForm.reset();
+
+rollNo.value="";
+
+amountDue.value="";
+
+feePreview.innerHTML="₹0";
+paidPreview.innerHTML="₹0";
+duePreview.innerHTML="₹0";
+
+}
+
+function refreshData(){
+
+loadStudents();
+
+}
+
+function unlockPanel(){
+
+const pass=
+ownerPassword.value.trim();
+
+if(
+pass==="Ritesh kumar R07"
+){
+
+sessionStorage.setItem(
+"lrk_owner_unlock",
+"YES"
+);
+
+lockScreen.classList.add(
+"hide"
+);
+
+app.style.display=
+"block";
+
+loadStudents();
+
+}else{
+
+lockError.innerHTML=
+"Wrong Password";
+
+}
+
+}
+
+window.onload=()=>{
+
+setTimeout(()=>{
+loader.classList.add(
+"hide"
+);
+},1200);
+
+if(
+sessionStorage.getItem(
+"lrk_owner_unlock"
+)==="YES"
+){
+
+lockScreen.classList.add(
+"hide"
+);
+
+app.style.display=
+"block";
+
+loadStudents();
+
+}
+
+};
+
+</script>
+
+<div class="section">
+
+<div class="panelCard">
+
+<div class="panelHead">
+<h2>📁 Database Registry</h2>
+</div>
+
+<div
+id="registryCards"
+class="liveProfiles">
+
+<div class="emptyCard">
+Loading Students...
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
 
 async function loadStudents(){
 
 if(loading) return;
+
 loading=true;
 
 try{
 
-const res=await fetch(API+"?action=verifyOtp&mobile=ALL_RECORDS");
-const data=await res.json();
+const res=
+await fetch(
+API+
+"?action=verifyOtp&mobile=ALL_RECORDS",
+{
+method:"GET",
+cache:"no-store"
+}
+);
 
-students=data.students||[];
+const data=
+await res.json();
+
+if(
+data.status==="success"
+){
+
+students=
+Array.isArray(
+data.students
+)
+?
+data.students
+:
+[];
 
 renderDashboard();
 renderProfiles();
 
+}else{
+
+students=[];
+renderProfiles();
+
+}
+
 }catch(e){
-alert("Database Load Failed. Please retry.");
+
+students=[];
+
+liveProfiles.innerHTML=
+`
+<div class="emptyCard">
+Backend Connection Failed
+</div>
+`;
+
+registryCards.innerHTML=
+`
+<div class="emptyCard">
+Backend Connection Failed
+</div>
+`;
+
 }
 
 loading=false;
+
 }
 
 function renderDashboard(){
 
-const totalS=students.length;
-const paidS=students.filter(s=>Number(s.amountDue)<=0).length;
-const dueS=students.filter(s=>Number(s.amountDue)>0).length;
-const paidAmt=students.reduce((a,b)=>a+Number(b.amountPaid||0),0);
-const dueAmt=students.reduce((a,b)=>a+Number(b.amountDue||0),0);
+const total=
+students.length;
 
-total.innerText=totalS;
-full.innerText=paidS;
-dueStudents.innerText=dueS;
-paidCol.innerText="₹"+paidAmt;
-pendingCol.innerText="₹"+dueAmt;
-adCount.innerText=totalS;
+const paid=
+students.filter(
+s=>Number(
+s.amountDue||0
+)<=0
+).length;
 
-const last=students.length?students[students.length-1].rollno:0;
-currentRoll.innerText=last;
-nextRoll.innerText=Number(last)+1;
+const due=
+students.filter(
+s=>Number(
+s.amountDue||0
+)>0
+).length;
+
+const paidCollection=
+students.reduce(
+(a,b)=>
+a+
+Number(
+b.amountPaid||0
+),
+0
+);
+
+const pending=
+students.reduce(
+(a,b)=>
+a+
+Number(
+b.amountDue||0
+),
+0
+);
+
+totalAdmissions.innerHTML=
+total;
+
+fullyPaid.innerHTML=
+paid;
+
+dueStudents.innerHTML=
+due;
+
+paidCollectionEl=
+document.getElementById(
+"paidCollection"
+);
+
+pendingCollectionEl=
+document.getElementById(
+"pendingCollection"
+);
+
+paidCollectionEl.innerHTML=
+"₹"+paidCollection;
+
+pendingCollectionEl.innerHTML=
+"₹"+pending;
+
+admissionCount.innerHTML=
+total;
+
+const lastRoll=
+students.length
+?
+Number(
+students[
+students.length-1
+].rollno||0
+)
+:
+0;
+
+currentRoll.innerHTML=
+lastRoll;
+nextRoll.innerHTML=
+lastRoll+1;
+
 }
 
 function renderProfiles(){
 
-const q=search.value.toLowerCase();
+const q=
+(
+liveSearch?.value||""
+)
+.toLowerCase();
 
-const filtered=students.filter(s=>
-String(s.name).toLowerCase().includes(q)||
-String(s.rollno).includes(q)||
-String(s.mobile1).includes(q)||
-String(s.course).toLowerCase().includes(q)
+const filtered=
+students.filter(s=>
+
+String(
+s.name||""
+)
+.toLowerCase()
+.includes(q)
+
+||
+
+String(
+s.rollno||""
+)
+.toLowerCase()
+.includes(q)
+
+||
+
+String(
+s.mobile1||""
+)
+.toLowerCase()
+.includes(q)
+
+||
+
+String(
+s.course||""
+)
+.toLowerCase()
+.includes(q)
+
 );
 
-profiles.innerHTML="";
-registry.innerHTML="";
+if(
+filtered.length===0
+){
+
+liveProfiles.innerHTML=
+`
+<div class="emptyCard">
+No Student Found
+</div>
+`;
+
+registryCards.innerHTML=
+`
+<div class="emptyCard">
+No Student Found
+</div>
+`;
+
+return;
+
+}
+
+liveProfiles.innerHTML="";
+registryCards.innerHTML="";
 
 filtered.forEach(s=>{
 
-const status=Number(s.amountDue)<=0?"FULL PAID":"DUE";
+const due=
+Number(
+s.amountDue||0
+);
 
-const admissionDate=(formatDate(s.createdAt)||"-");
-const waMsg=`Dear Student ${s.name},
+const status=
+due<=0
+?
+"FULL PAID"
+:
+"DUE";
 
-आपका Admission ${admissionDate} को LRK Computer Institute, Mihinpurwa Bahraich में हुआ था।
+const color=
+due<=0
+?
+"#1bdc85"
+:
+"#ff4f75";
 
-Roll No: ${s.rollno}
-Course: ${s.course}
-Paid Amount: ₹${s.amountPaid}
-Due Amount: ₹${s.amountDue}
-Promise Date: ${s.promiseDate||"-"}
+const card=
+`
+<div class="profileCard">
 
-कृपया समय पर फीस जमा करें।
+<div class="profileTop">
 
-Dear ${s.name},
-Your admission at LRK Computer Institute was completed on ${admissionDate}.
-Paid Amount: ₹${s.amountPaid}
-Due Amount: ₹${s.amountDue}
-Please deposit pending fee by ${s.promiseDate||"-"}.
+<h3>
+${s.name||"-"}
+</h3>
 
-ISO 9001:2015 Certified
-LRK Computer Institute
+<div
+class="statusBadge"
+style="
+background:${color}20;
+color:${color};
+">
+${status}
+</div>
+
+</div>
+
+<div class="profileGrid">
+
+<div>
+<b>Roll:</b>
+${s.rollno}
+</div>
+
+<div>
+<b>Course:</b>
+${s.course||"-"}
+</div>
+
+<div>
+<b>Mobile:</b>
+${s.mobile1||"-"}
+</div>
+
+<div>
+<b>Paid:</b>
+₹${s.amountPaid||0}
+</div>
+
+<div>
+<b>Due:</b>
+₹${s.amountDue||0}
+</div>
+
+<div>
+<b>Promise:</b>
+${s.promiseDate||"-"}
+</div>
+
+</div>
+
+<div class="cardBtns">
+
+<button
+class="actionBtn"
+onclick='editStudent(${JSON.stringify(s)})'>
+Edit
+</button>
+
+<button
+class="actionBtn"
+onclick='deleteStudent("${s.rollno}")'>
+Delete
+</button>
+
+<button
+class="actionBtn"
+onclick='openWhatsapp(${JSON.stringify(s)})'>
+WhatsApp
+</button>
+
+<button
+class="actionBtn"
+onclick='openPDF(${JSON.stringify(s)})'>
+PDF
+</button>
+
+</div>
+
+</div>
 `;
-Roll No: ${s.rollno}
-Course: ${s.course}
-Paid Amount: ₹${s.amountPaid}
-Pending Due: ₹${s.amountDue}
-Promise Date: ${s.promiseDate}
 
-LRK Computer Institute
-Mihinpurwa Bahraich`;
+liveProfiles.innerHTML+=
+card;
 
-const wa="https://wa.me/91"+s.mobile1+"?text="+encodeURIComponent(waMsg);
+registryCards.innerHTML+=
+card;
 
-profiles.innerHTML+=`
-<div class="student">
-<h3>${s.name}</h3>
-<p>Roll: ${s.rollno}</p>
-<p>Course: ${s.course}</p>
-<p>Mobile: ${s.mobile1}</p>
-<p>Paid: ₹${s.amountPaid}</p>
-<p>Due: ₹${s.amountDue}</p>
-<p>Promise: ${s.promiseDate||"-"}</p>
-<div class="badge ${Number(s.amountDue)<=0?'paid':'due'}">${status}</div>
-<div class="row">
-<button class="sm wa" onclick="window.open('${wa}')">WhatsApp</button><button class="sm edit" onclick='openStudentPDF(${JSON.stringify(s)})'>PDF</button>
-</div>
-</div>
-`;
-
-registry.innerHTML+=`
-<div class="student">
-<h3>${s.name}</h3>
-<p><b>Roll:</b> ${s.rollno}</p>
-<p><b>Father:</b> ${s.father||''}</p>
-<p><b>Mother:</b> ${s.mother||''}</p>
-<p><b>DOB:</b> ${s.dob||''}</p>
-<p><b>Mobile1:</b> ${s.mobile1||''}</p>
-<p><b>Mobile2:</b> ${s.mobile2||''}</p>
-<p><b>Email:</b> ${s.email||''}</p>
-<p><b>Qualification:</b> ${s.qual||''}</p>
-<p><b>Caste:</b> ${s.caste||''}</p>
-<p><b>Aadhaar:</b> ${s.aadhar||''}</p>
-<p><b>Course:</b> ${s.course||''}</p>
-<p><b>Address:</b> ${s.address||''}</p>
-<p><b>Payment:</b> ${s.paymentMode||''}</p>
-<p><b>Paid:</b> ₹${s.amountPaid||0}</p>
-<p><b>Due:</b> ₹${s.amountDue||0}</p>
-<p><b>Promise:</b> ${s.promiseDate||''}</p>
-
-<div class="row">
-<button class="sm edit" onclick='editStudent(${JSON.stringify(s)})'>Edit</button>
-<button class="sm del" onclick="deleteStudent('${s.rollno}')">Delete</button>
-<button class="sm wa" onclick="window.open('${wa}')">WhatsApp</button><button class="sm edit" onclick='openStudentPDF(${JSON.stringify(s)})'>PDF</button>
-</div>
-</div>
-`;
 });
+
 }
-async function saveStudent(e){
+
+liveSearch?.addEventListener(
+"input",
+renderProfiles
+);
+
+</script>
+
+
+<script>
+
+studentForm.addEventListener(
+"submit",
+async function(e){
+
 e.preventDefault();
 
-const data={
-action:"registerStudent",
-rollNo:rollNo.value,
-name:name.value.trim(),
-father:father.value.trim(),
-mother:mother.value.trim(),
-dob:dob.value,
-mobile1:mobile1.value.trim(),
-mobile2:mobile2.value.trim(),
-email:email.value.trim(),
-qual:qual.value.trim(),
-caste:caste.value.trim(),
-aadhar:aadhar.value.trim(),
-course:course.value,
-address:address.value.trim(),
-paymentMode:paymentMode.value,
-amountPaid:amountPaid.value||0,
-amountDue:amountDue.value||0,
-promiseDate:promiseDate.value
+const payload={
+
+action:
+rollNo.value
+?
+"updateStudent"
+:
+"registerStudent",
+
+rollNo:
+rollNo.value,
+
+name:
+studentName.value.trim(),
+
+father:
+fatherName.value.trim(),
+
+mother:
+motherName.value.trim(),
+
+dob:
+dob.value,
+
+mobile1:
+mobile1.value.trim(),
+
+mobile2:
+mobile2.value.trim(),
+
+email:
+email.value.trim(),
+
+qual:
+qualification.value.trim(),
+
+caste:
+caste.value.trim(),
+
+aadhar:
+aadhar.value.trim(),
+
+course:
+course.value,
+
+address:
+address.value.trim(),
+
+paymentMode:
+paymentMode.value,
+
+courseFee:
+Number(
+courseFee.value||0
+),
+
+amountPaid:
+Number(
+amountPaid.value||0
+),
+
+amountDue:
+Number(
+amountDue.value||0
+),
+
+promiseDate:
+promiseDate.value
+
 };
 
 try{
 
-const res=await fetch(API,{
+const res=
+await fetch(
+API,
+{
 method:"POST",
-body:JSON.stringify(data)
+headers:{
+"Content-Type":
+"application/json"
+},
+body:
+JSON.stringify(
+payload
+)
+}
+);
+
+const data=
+await res.json();
+
+if(
+data.status===
+"success"
+){
+
+alert(
+rollNo.value
+?
+"Updated Successfully"
+:
+"Admission Saved"
+);
+
+resetForm();
+
+loadStudents();
+
+}else{
+
+alert(
+data.message||
+"Save Failed"
+);
+
+}
+
+}catch(err){
+
+alert(
+"Network Error"
+);
+
+}
+
 });
 
-const json=await res.json();
-
-if(json.status==="success"){
-alert(rollNo.value?"Updated Successfully":"Admission Saved");
-studentForm.reset();
-rollNo.value="";
-amountDue.value="";
-loadStudents();
-}else{
-alert(json.message||"Failed");
-}
-
-}catch(e){
-alert("Save Failed. Check connection and retry.");
-}
-}
-
 function editStudent(s){
-
-rollNo.value=s.rollno||"";
-name.value=s.name||"";
-father.value=s.father||"";
-mother.value=s.mother||"";
-dob.value=formatDate(s.dob);
-mobile1.value=s.mobile1||"";
-mobile2.value=s.mobile2||"";
-email.value=s.email||"";
-qual.value=s.qual||"";
-caste.value=s.caste||"";
-aadhar.value=s.aadhar||"";
-course.value=s.course||"";
-address.value=s.address||"";
-paymentMode.value=s.paymentMode||"Cash";
-amountPaid.value=s.amountPaid||0;
-amountDue.value=s.amountDue||0;
-promiseDate.value=formatDate(s.promiseDate);
-
-if(fees[s.course]){
-customFee.value=Number(s.amountPaid||0)+Number(s.amountDue||0);
-}
 
 window.scrollTo({
 top:0,
 behavior:"smooth"
 });
+
+rollNo.value=
+s.rollno||"";
+
+studentName.value=
+s.name||"";
+
+fatherName.value=
+s.father||"";
+
+motherName.value=
+s.mother||"";
+
+dob.value=
+formatDate(
+s.dob
+);
+
+mobile1.value=
+s.mobile1||"";
+
+mobile2.value=
+s.mobile2||"";
+
+email.value=
+s.email||"";
+
+qualification.value=
+s.qual||"";
+
+caste.value=
+s.caste||"";
+
+aadhar.value=
+s.aadhar||"";
+
+course.value=
+s.course||"";
+
+courseFee.value=
+s.courseFee||"";
+
+paymentMode.value=
+s.paymentMode||"Cash";
+
+amountPaid.value=
+s.amountPaid||"";
+
+amountDue.value=
+s.amountDue||"";
+
+promiseDate.value=
+formatDate(
+s.promiseDate
+);
+
+address.value=
+s.address||"";
+
+calcDue();
+
 }
 
-async function deleteStudent(roll){
+async function deleteStudent(
+roll
+){
 
-if(!confirm("Delete Student?")) return;
+const ok=
+confirm(
+"Delete Student?"
+);
+
+if(!ok) return;
 
 try{
 
-const res=await fetch(API+"?action=deleteStudent&rollno="+roll);
-const json=await res.json();
+const res=
+await fetch(
+API+
+"?action=deleteStudent&rollno="
++
+encodeURIComponent(
+roll
+),
+{
+method:"GET"
+}
+);
 
-if(json.status==="success"){
-students=students.filter(s=>String(s.rollno)!==String(roll));
-renderDashboard();
-renderProfiles();
-alert("Deleted");
+const data=
+await res.json();
+
+if(
+data.status===
+"success"
+){
+
+alert(
+"Deleted Successfully"
+);
+
+loadStudents();
+
 }else{
-alert("Delete Failed");
+
+alert(
+data.message||
+"Delete Failed"
+);
+
 }
 
-}catch(e){
-alert("Delete Error");
-}
+}catch(err){
+
+alert(
+"Network Error"
+);
+
 }
 
-function formatDate(d){
+}
 
-if(!d) return "";
+function formatDate(v){
+
+if(!v) return "";
 
 try{
-const date=new Date(d);
-if(isNaN(date)) return "";
-return date.toISOString().split("T")[0];
-}catch{
+
+const d=
+new Date(v);
+
+if(
+isNaN(d)
+){
 return "";
 }
+
+return d
+.toISOString()
+.split("T")[0];
+
+}catch{
+
+return "";
+
 }
+
+}
+
+</script>
+<script>
+
+function openWhatsapp(s){
+
+const msg=
+
+`Dear Student ${s.name},
+
+आपका Admission ${s.admissionDate||"-"} को
+LRK Computer Institute में हुआ था।
+
+Course: ${s.course||"-"}
+Roll No: ${s.rollno||"-"}
+Paid Amount: ₹${s.amountPaid||0}
+Due Amount: ₹${s.amountDue||0}
+Promise Date: ${s.promiseDate||"-"}
+
+कृपया समय से फीस जमा करें।
+
+Dear Student,
+Your admission at LRK Computer Institute was completed on ${s.admissionDate||"-"}.
+
+Course: ${s.course||"-"}
+Roll No: ${s.rollno||"-"}
+
+Paid Amount: ₹${s.amountPaid||0}
+Due Amount: ₹${s.amountDue||0}
+
+Please clear pending fees by ${s.promiseDate||"-"}.
+
+Thank you.
+
+ISO 9001:2015 Certified
+LRK Computer Institute
+Mihinpurwa Bahraich`;
+
+const phone=
+String(
+s.mobile1||""
+)
+.replace(
+/[^0-9]/g,
+""
+);
+
+if(!phone){
+
+alert(
+"Mobile Number Missing"
+);
+
+return;
+
+}
+
+window.open(
+
+"https://wa.me/91"+
+phone+
+"?text="+
+encodeURIComponent(
+msg
+),
+
+"_blank"
+
+);
+
+}
+
+function whatsappPDFReminder(s){
+
+const phone=
+String(
+s.mobile1||""
+)
+.replace(
+/[^0-9]/g,
+""
+);
+
+if(!phone){
+
+alert(
+"Mobile Number Missing"
+);
+
+return;
+
+}
+
+const text=
+
+`Dear ${s.name},
+
+Registration Form Ready.
+
+Roll No: ${s.rollno}
+Course: ${s.course}
+
+Please collect or download your registration PDF.
+
+LRK Computer Institute
+ISO 9001:2015
+Mihinpurwa Bahraich`;
+
+window.open(
+
+"https://wa.me/91"+
+phone+
+"?text="+
+encodeURIComponent(
+text
+),
+
+"_blank"
+
+);
+
+}
+
 </script>
 
-<div id="pdfModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99999;align-items:center;justify-content:center;padding:20px">
-<div style="background:#fff;color:#000;width:100%;max-width:900px;border-radius:20px;padding:20px;max-height:90vh;overflow:auto">
-<div style="display:flex;justify-content:space-between;align-items:center">
-<h2>Student Admission PDF</h2>
-<button onclick="closePdfPanel()" style="padding:8px 14px;border:none;border-radius:10px;background:#7d3cff;color:#fff">Close</button>
+<div class="section">
+
+<div class="panelCard">
+
+<div class="panelHead">
+<h2>📄 PDF Center</h2>
 </div>
 
-<div id="pdfContent" style="padding:10px;border:2px solid #000;margin-top:15px;background:#fff;color:#000;width:210mm;min-height:297mm">
-<div style="border:2px solid #000;padding:8px">
+<div
+id="pdfCenter"
+class="liveProfiles">
 
-<div style="display:flex;justify-content:space-between;font-size:12px">
-<div>UP/40/25-26/</div>
-<div>Registration Form</div>
-<div>Mihinpurwa</div>
+<div class="emptyCard">
+PDF Actions Available In Student Cards
 </div>
 
-<div style="background:#e33122;color:#fff;border:2px solid #000;padding:6px;text-align:center;font-size:34px;font-weight:900;letter-spacing:1px">
+</div>
+
+</div>
+
+</div>
+
+
+<div id="pdfTemplate" style="display:none;">
+
+<div id="pdfPage" style="
+width:794px;
+background:#fff;
+color:#000;
+padding:30px;
+font-family:Arial,sans-serif;
+">
+
+<div style="
+border:2px solid #000;
+padding:18px;
+">
+
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+border-bottom:2px solid #000;
+padding-bottom:10px;
+">
+
+<div style="
+width:90px;
+height:90px;
+border:1px solid #000;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:12px;
+">
+LOGO
+</div>
+
+<div style="
+text-align:center;
+flex:1;
+">
+
+<div style="
+font-size:28px;
+font-weight:700;
+">
 LRK COMPUTER INSTITUTE
 </div>
 
-<div style="text-align:center;font-weight:900;font-size:18px;margin:6px 0">ISO 9001:2015 CERTIFIED</div>
+<div style="
+font-size:14px;
+font-weight:700;
+margin-top:4px;
+">
+ISO CERTIFIED 9001-2015
+</div>
 
-<div id="pdfStudentData"></div>
+<div style="
+font-size:14px;
+margin-top:4px;
+">
+Mihinpurwa Bahraich
+</div>
 
-<div style="display:grid;grid-template-columns:1fr 1.6fr;gap:10px;margin-top:10px">
+<div style="
+font-size:20px;
+font-weight:700;
+margin-top:10px;
+">
+REGISTRATION FORM
+</div>
+
+</div>
+
+<div style="
+width:90px;
+height:110px;
+border:1px solid #000;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:12px;
+">
+PHOTO
+</div>
+
+</div>
+
+<div style="
+margin-top:18px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+font-size:14px;
+">
+
 <div>
-<table style="width:100%;border-collapse:collapse;font-size:12px">
-<tr><td style="border:1px solid #000;padding:4px">Course</td><td style="border:1px solid #000;padding:4px">Fees</td></tr>
-<tr><td style="border:1px solid #000;padding:4px">CCC</td><td style="border:1px solid #000;padding:4px"></td></tr>
-<tr><td style="border:1px solid #000;padding:4px">ADCA</td><td style="border:1px solid #000;padding:4px"></td></tr>
-<tr><td style="border:1px solid #000;padding:4px">DCA</td><td style="border:1px solid #000;padding:4px"></td></tr>
-<tr><td style="border:1px solid #000;padding:4px">Typing</td><td style="border:1px solid #000;padding:4px"></td></tr>
-<tr><td style="border:1px solid #000;padding:4px">Tally</td><td style="border:1px solid #000;padding:4px"></td></tr>
-<tr><td style="border:1px solid #000;padding:4px">Other Course</td><td style="border:1px solid #000;padding:4px"></td></tr>
+<b>Receipt No:</b>
+<span id="pdfReceipt"></span>
+</div>
+
+<div>
+<b>Admission Date:</b>
+<span id="pdfAdmissionDate"></span>
+</div>
+
+<div>
+<b>Name:</b>
+<span id="pdfName"></span>
+</div>
+
+<div>
+<b>Father Name:</b>
+<span id="pdfFather"></span>
+</div>
+
+<div>
+<b>Mother Name:</b>
+<span id="pdfMother"></span>
+</div>
+
+<div>
+<b>Date Of Birth:</b>
+<span id="pdfDob"></span>
+</div>
+
+<div>
+<b>Mobile No 1:</b>
+<span id="pdfMobile1"></span>
+</div>
+
+<div>
+<b>Mobile No 2:</b>
+<span id="pdfMobile2"></span>
+</div>
+
+<div>
+<b>Qualification:</b>
+<span id="pdfQual"></span>
+</div>
+
+<div>
+<b>Caste:</b>
+<span id="pdfCaste"></span>
+</div>
+
+<div>
+<b>Aadhar No:</b>
+<span id="pdfAadhar"></span>
+</div>
+
+<div style="
+grid-column:1/-1;
+">
+<b>Address:</b>
+<span id="pdfAddress"></span>
+</div>
+
+</div>
+
+<div style="
+margin-top:20px;
+border:1px solid #000;
+padding:10px;
+">
+
+<div style="
+font-size:16px;
+font-weight:700;
+margin-bottom:10px;
+">
+Course Details
+</div>
+
+<table style="
+width:100%;
+border-collapse:collapse;
+font-size:14px;
+">
+
+<tr>
+<td style="border:1px solid #000;padding:8px;">
+Course
+</td>
+<td style="border:1px solid #000;padding:8px;">
+<span id="pdfCourse"></span>
+</td>
+</tr>
+
+<tr>
+<td style="border:1px solid #000;padding:8px;">
+Total Fees
+</td>
+<td style="border:1px solid #000;padding:8px;">
+₹<span id="pdfFee"></span>
+</td>
+</tr>
+
+<tr>
+<td style="border:1px solid #000;padding:8px;">
+Paid Fees
+</td>
+<td style="border:1px solid #000;padding:8px;">
+₹<span id="pdfPaid"></span>
+</td>
+</tr>
+
+<tr>
+<td style="border:1px solid #000;padding:8px;">
+Due Fees
+</td>
+<td style="border:1px solid #000;padding:8px;">
+₹<span id="pdfDue"></span>
+</td>
+</tr>
+
 </table>
 
-<table style="width:100%;border-collapse:collapse;font-size:12px;margin-top:8px">
-<tr><td style="border:1px solid #000;padding:4px">Admission Fees</td></tr>
-<tr><td style="border:1px solid #000;padding:4px">Monthly Fees</td></tr>
-<tr><td style="border:1px solid #000;padding:4px">Exam Fees</td></tr>
-<tr><td style="border:1px solid #000;padding:4px">Other</td></tr>
-<tr><td style="border:1px solid #000;padding:4px">Total</td></tr>
-</table>
 </div>
 
-<div style="border:1px solid #000;padding:8px;font-size:11px;line-height:1.6">
-<div style="text-align:center;font-size:18px;font-weight:700">Rules & Regulations</div>
-1. Student attendance and discipline is compulsory.<br>
-2. Fee once paid will not be refunded or transferred.<br>
-3. Institute decision will be final in all matters.<br>
-4. Damage to institute property is student responsibility.<br>
-5. Smoking and misconduct not allowed.<br>
-6. Student must carry valid ID card.<br>
-7. Institute may modify rules when required.<br>
+<div style="
+margin-top:20px;
+border:1px solid #000;
+padding:12px;
+font-size:12px;
+line-height:1.8;
+">
 
-<div style="margin-top:12px;text-align:center;font-weight:700">
-I have read and accepted all institute rules and regulations.
-</div>
-</div>
+<b>Rules & Regulations</b>
+
+<ol style="
+margin-top:8px;
+padding-left:18px;
+">
+
+<li>Attendance and discipline are compulsory.</li>
+<li>Fees once paid are non-refundable.</li>
+<li>Institute rules must be followed.</li>
+<li>Damage to institute property is chargeable.</li>
+<li>Smoking and misconduct prohibited.</li>
+<li>Institute reserves all rights.</li>
+
+</ol>
+
 </div>
 
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:15px">
+<div style="
+display:flex;
+justify-content:space-between;
+margin-top:45px;
+font-size:14px;
+">
+
 <div>
-<div style="margin:10px 0">Student Signature __________________</div>
-<div style="margin:10px 0">Receipt No __________________</div>
-<div style="margin:10px 0">Admission Date __________________</div>
-<div style="margin:10px 0">Teacher Sign __________________</div>
+__________________<br>
+Student Signature
 </div>
-<div style="border:1px solid #000;height:120px"></div>
+
+<div>
+__________________<br>
+Teacher Sign
 </div>
 
 </div>
+
 </div>
+
 </div>
-<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:15px">
-<button class="btn" style="width:auto" onclick="printPDFCard()">Print</button>
-<button class="btn" style="width:auto" onclick="downloadPDF()">Download PDF</button>
-<button class="btn wa" style="width:auto" onclick="whatsappPDF()">WhatsApp PDF Note</button>
-</div>
-</div>
+
 </div>
 
 <script>
-let pdfStudent=null;
 
-function openPdfPanel(){
-alert("Open student PDF using PDF button inside registry.");
+function fillPDF(s){
+
+pdfReceipt.innerHTML=
+s.rollno||"";
+
+pdfAdmissionDate.innerHTML=
+s.admissionDate||"-";
+
+pdfName.innerHTML=
+s.name||"-";
+
+pdfFather.innerHTML=
+s.father||"-";
+
+pdfMother.innerHTML=
+s.mother||"-";
+
+pdfDob.innerHTML=
+s.dob||"-";
+
+pdfMobile1.innerHTML=
+s.mobile1||"-";
+
+pdfMobile2.innerHTML=
+s.mobile2||"-";
+
+pdfQual.innerHTML=
+s.qual||"-";
+
+pdfCaste.innerHTML=
+s.caste||"-";
+
+pdfAadhar.innerHTML=
+s.aadhar||"-";
+
+pdfAddress.innerHTML=
+s.address||"-";
+
+pdfCourse.innerHTML=
+s.course||"-";
+
+pdfFee.innerHTML=
+s.courseFee||0;
+
+pdfPaid.innerHTML=
+s.amountPaid||0;
+
+pdfDue.innerHTML=
+s.amountDue||0;
+
 }
-function openStudentPDF(s){
-pdfStudent=s;
-pdfModal.style.display="flex";
-pdfStudentData.innerHTML=`
-<table style="width:100%;border-collapse:collapse;font-size:12px">
-<tr><td style="border:1px solid #000;padding:4px">Name</td><td style="border:1px solid #000;padding:4px">${s.name||''}</td><td style="border:1px solid #000;padding:4px">Mother</td><td style="border:1px solid #000;padding:4px">${s.mother||''}</td></tr>
-<tr><td style="border:1px solid #000;padding:4px">Father Name</td><td style="border:1px solid #000;padding:4px">${s.father||''}</td><td style="border:1px solid #000;padding:4px">Mobile 2</td><td style="border:1px solid #000;padding:4px">${s.mobile2||''}</td></tr>
-<tr><td style="border:1px solid #000;padding:4px">Address</td><td style="border:1px solid #000;padding:4px">${s.address||''}</td><td style="border:1px solid #000;padding:4px">Caste</td><td style="border:1px solid #000;padding:4px">${s.caste||''}</td></tr>
-<tr><td style="border:1px solid #000;padding:4px">DOB</td><td style="border:1px solid #000;padding:4px">${s.dob||''}</td><td style="border:1px solid #000;padding:4px">Qualification</td><td style="border:1px solid #000;padding:4px">${s.qual||''}</td></tr>
-<tr><td style="border:1px solid #000;padding:4px">Mobile 1</td><td style="border:1px solid #000;padding:4px">${s.mobile1||''}</td><td style="border:1px solid #000;padding:4px">Aadhaar</td><td style="border:1px solid #000;padding:4px">${s.aadhar||''}</td></tr>
-<tr><td style="border:1px solid #000;padding:4px">Course</td><td style="border:1px solid #000;padding:4px">${s.course||''}</td><td style="border:1px solid #000;padding:4px">Admission Date</td><td style="border:1px solid #000;padding:4px">${formatDate(s.createdAt)||''}</td></tr>
-</table>
-`;//
-<p><b>Name:</b> ${s.name||''}</p>
-<p><b>Father:</b> ${s.father||''}</p>
-<p><b>Mother:</b> ${s.mother||''}</p>
-<p><b>Course:</b> ${s.course||''}</p>
-<p><b>Roll:</b> ${s.rollno||''}</p>
-<p><b>Mobile:</b> ${s.mobile1||''}</p>
-<p><b>Address:</b> ${s.address||''}</p>
-<p><b>Paid:</b> ₹${s.amountPaid||0}</p>
-<p><b>Due:</b> ₹${s.amountDue||0}</p>
-`;
-}
-function closePdfPanel(){pdfModal.style.display='none';}
-function printPDFCard(){
-const w=window.open('','','width=900,height=700');
-w.document.write(pdfContent.innerHTML);
-w.print();
-}
-async function downloadPDF(){
-const {jsPDF}=window.jspdf;
-const canvas=await html2canvas(document.getElementById('pdfContent'));
-const img=canvas.toDataURL('image/png');
-const pdf=new jsPDF('p','mm','a4');
-pdf.addImage(img,'PNG',5,5,200,280);
-pdf.save((pdfStudent?.name||'student')+'.pdf');
-}
-function whatsappPDF(){
-if(!pdfStudent) return;
-const txt=`LRK Computer Institute\n${pdfStudent.name}\nRoll:${pdfStudent.rollno}\nCourse:${pdfStudent.course}\nPaid:₹${pdfStudent.amountPaid}\nDue:₹${pdfStudent.amountDue}`;
-window.open('https://wa.me/91'+pdfStudent.mobile1+'?text='+encodeURIComponent(txt));
-}
+
 </script>
+
+<script>
+
+async function generatePDF(s){
+
+fillPDF(s);
+
+const page=
+document.getElementById(
+"pdfPage"
+);
+
+page.style.display=
+"block";
+
+const canvas=
+await html2canvas(
+page,
+{
+scale:2,
+useCORS:true
+}
+);
+
+const img=
+canvas.toDataURL(
+"image/png"
+);
+
+const {
+jsPDF
+}=
+window.jspdf;
+
+const pdf=
+new jsPDF(
+"P",
+"mm",
+"A4"
+);
+
+const width=
+210;
+
+const height=
+canvas.height*
+width/
+canvas.width;
+
+pdf.addImage(
+img,
+"PNG",
+0,
+0,
+width,
+height
+);
+
+page.style.display=
+"none";
+
+return pdf;
+
+}
+
+async function openPDF(s){
+
+const pdf=
+await generatePDF(
+s
+);
+
+pdf.output(
+"dataurlnewwindow"
+);
+
+}
+
+async function downloadPDF(s){
+
+const pdf=
+await generatePDF(
+s
+);
+
+pdf.save(
+
+`${s.name||"Student"}_${s.rollno||""}.pdf`
+
+);
+
+}
+
+async function printPDF(s){
+
+const pdf=
+await generatePDF(
+s
+);
+
+const blob=
+pdf.output(
+"bloburl"
+);
+
+const win=
+window.open(
+blob
+);
+
+setTimeout(()=>{
+
+win.print();
+
+},1000);
+
+}
+
+function renderPDFCenter(){
+
+if(
+students.length===0
+){
+
+pdfCenter.innerHTML=
+`
+<div class="emptyCard">
+No Student Available
+</div>
+`;
+
+return;
+
+}
+
+pdfCenter.innerHTML="";
+
+students.forEach(s=>{
+
+pdfCenter.innerHTML+=
+`
+<div class="profileCard">
+
+<div class="profileTop">
+
+<h3>
+${s.name}
+</h3>
+
+<div
+class="statusBadge"
+style="
+background:#7d3cff20;
+color:#7d3cff;
+">
+ROLL
+${s.rollno}
+</div>
+
+</div>
+
+<div class="profileGrid">
+
+<div>
+<b>Course:</b>
+${s.course||"-"}
+</div>
+
+<div>
+<b>Mobile:</b>
+${s.mobile1||"-"}
+</div>
+
+</div>
+
+<div class="cardBtns">
+
+<button
+class="actionBtn"
+onclick='openPDF(${JSON.stringify(s)})'>
+Preview
+</button>
+
+<button
+class="actionBtn"
+onclick='printPDF(${JSON.stringify(s)})'>
+Print
+</button>
+
+<button
+class="actionBtn"
+onclick='downloadPDF(${JSON.stringify(s)})'>
+Download
+</button>
+
+<button
+class="actionBtn"
+onclick='whatsappPDFReminder(${JSON.stringify(s)})'>
+WhatsApp PDF
+</button>
+
+</div>
+
+</div>
+`;
+});
+
+}
+
+const oldLoad=
+loadStudents;
+
+loadStudents=
+async function(){
+
+await oldLoad();
+
+renderPDFCenter();
+
+};
+
+</script>
+
+
+<script>
+
+function scrollToTop(){
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+}
+
+document.addEventListener(
+"keydown",
+function(e){
+
+if(
+e.key==="Enter"
+&&
+document.activeElement===
+ownerPassword
+){
+
+unlockPanel();
+
+}
+
+});
+
+window.addEventListener(
+"online",
+()=>{
+
+refreshData();
+
+});
+
+window.addEventListener(
+"focus",
+()=>{
+
+if(
+sessionStorage.getItem(
+"lrk_owner_unlock"
+)==="YES"
+){
+
+refreshData();
+
+}
+
+});
+
+document.addEventListener(
+"click",
+function(e){
+
+if(
+e.target.classList.contains(
+"actionBtn"
+)
+){
+
+e.target.style.transform=
+"scale(.96)";
+
+setTimeout(()=>{
+
+e.target.style.transform=
+"";
+
+},120);
+
+}
+
+});
+
+const observer=
+new MutationObserver(
+()=>{
+
+document
+.querySelectorAll(
+".profileCard"
+)
+.forEach(
+(
+card,
+i
+)=>{
+
+card.style.opacity=0;
+card.style.transform=
+"translateY(18px)";
+
+setTimeout(()=>{
+
+card.style.transition=
+".35s";
+
+card.style.opacity=1;
+card.style.transform=
+"translateY(0)";
+
+},i*40);
+
+}
+);
+
+}
+);
+
+observer.observe(
+document.body,
+{
+childList:true,
+subtree:true
+}
+);
+
+console.clear();
+
+console.log(
+"LRK ADMIN PANEL READY"
+);
+
+</script>
+
+</div>
+
+</div>
+
 </body>
 </html>
